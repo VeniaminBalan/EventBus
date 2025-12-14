@@ -19,9 +19,8 @@ public class SubscriberRegistry
     /// </summary>
     public void AddHandler(Models.SubscriberMethod subscriberMethod)
     {
-        if (subscriberMethod == null)
-            throw new ArgumentNullException(nameof(subscriberMethod));
-            
+        ArgumentNullException.ThrowIfNull(subscriberMethod);
+
         var handlers = _handlers.GetOrAdd(subscriberMethod.EventType, _ => new ConcurrentBag<Models.SubscriberMethod>());
         handlers.Add(subscriberMethod);
     }
@@ -31,22 +30,18 @@ public class SubscriberRegistry
     /// </summary>
     public void RemoveHandler(object subscriber)
     {
-        if (subscriber == null)
-            throw new ArgumentNullException(nameof(subscriber));
-            
-        foreach (var kvp in _handlers)
+        ArgumentNullException.ThrowIfNull(subscriber);
+
+        foreach (var (key, handlers) in _handlers)
         {
-            var handlers = kvp.Value;
             var toRemove = handlers.Where(h => ReferenceEquals(h.Subscriber, subscriber)).ToList();
-            
-            if (toRemove.Any())
-            {
-                // Create a new bag without the removed handlers
-                var newBag = new ConcurrentBag<Models.SubscriberMethod>(
-                    handlers.Except(toRemove)
-                );
-                _handlers.TryUpdate(kvp.Key, newBag, handlers);
-            }
+
+            if (toRemove.Count == 0) continue;
+            // Create a new bag without the removed handlers
+            var newBag = new ConcurrentBag<Models.SubscriberMethod>(
+                handlers.Except(toRemove)
+            );
+            _handlers.TryUpdate(key, newBag, handlers);
         }
     }
     
@@ -55,9 +50,8 @@ public class SubscriberRegistry
     /// </summary>
     public IEnumerable<Models.SubscriberMethod> GetHandlers(Type eventType)
     {
-        if (eventType == null)
-            throw new ArgumentNullException(nameof(eventType));
-            
+        ArgumentNullException.ThrowIfNull(eventType);
+
         if (_handlers.TryGetValue(eventType, out var handlers))
         {
             return handlers.OrderByDescending(h => h.Priority).ToList();
@@ -71,9 +65,8 @@ public class SubscriberRegistry
     /// </summary>
     public bool HasHandlers(Type eventType)
     {
-        if (eventType == null)
-            throw new ArgumentNullException(nameof(eventType));
-            
+        ArgumentNullException.ThrowIfNull(eventType);
+
         return _handlers.TryGetValue(eventType, out var handlers) && handlers.Any();
     }
     

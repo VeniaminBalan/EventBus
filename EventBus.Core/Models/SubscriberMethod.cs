@@ -47,10 +47,9 @@ public class SubscriberMethod
     /// </summary>
     public void Invoke(object eventObject)
     {
-        if (eventObject == null)
-            throw new ArgumentNullException(nameof(eventObject));
-            
-        Method.Invoke(Subscriber, new[] { eventObject });
+        ArgumentNullException.ThrowIfNull(eventObject);
+
+        Method.Invoke(Subscriber, [eventObject]);
     }
     
     /// <summary>
@@ -58,10 +57,9 @@ public class SubscriberMethod
     /// </summary>
     public async Task InvokeAsync(object eventObject)
     {
-        if (eventObject == null)
-            throw new ArgumentNullException(nameof(eventObject));
-            
-        var result = Method.Invoke(Subscriber, new[] { eventObject });
+        ArgumentNullException.ThrowIfNull(eventObject);
+
+        var result = Method.Invoke(Subscriber, [eventObject]);
         
         // If the method returns a Task, await it
         if (result is Task task)

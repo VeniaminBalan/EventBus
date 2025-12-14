@@ -1,9 +1,7 @@
-using EventBus.Core;
 using EventBus.Core.Attributes;
 using EventBus.Core.Enums;
-using EventBus.Core.Models;
 
-namespace EventBus.Sample;
+namespace EventBus.Core;
 
 /// <summary>
 /// Sample application demonstrating EventBus usage
@@ -207,7 +205,7 @@ public class EmailService
 public class ErrorHandler
 {
     [EventHandler]
-    public void OnSubscriberException(EventBus.Core.Exceptions.SubscriberExceptionEvent evt)
+    public void OnSubscriberException(global::EventBus.Core.Exceptions.SubscriberExceptionEvent evt)
     {
         Console.WriteLine($"[ErrorHandler] Exception caught: {evt.Exception.Message}");
         Console.WriteLine($"[ErrorHandler] Caused by event: {evt.CausingEvent.GetType().Name}");
