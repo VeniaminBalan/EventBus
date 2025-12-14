@@ -21,8 +21,7 @@ public class EventBus
     
     private readonly SubscriberRegistry _registry;
     private readonly EventBusConfiguration _configuration;
-    private readonly object _publishLock = new();
-    
+
     /// <summary>
     /// Creates a new instance of EventBus with default configuration.
     /// </summary>
@@ -40,13 +39,25 @@ public class EventBus
     }
     
     /// <summary>
+    /// Creates a new instance of EventBus with configuration set via an action.
+    /// </summary>
+    /// <param name="configureAction">Action to configure the EventBus options.</param>
+    public EventBus(Action<EventBusConfiguration> configureAction)
+    {
+        ArgumentNullException.ThrowIfNull(configureAction);
+        
+        _configuration = new EventBusConfiguration();
+        configureAction(_configuration);
+        _registry = new SubscriberRegistry();
+    }
+    
+    /// <summary>
     /// Registers an object as a subscriber. Scans for methods with [EventHandler] attribute.
     /// </summary>
     public void Register(object subscriber)
     {
-        if (subscriber == null)
-            throw new ArgumentNullException(nameof(subscriber));
-            
+        ArgumentNullException.ThrowIfNull(subscriber);
+
         var type = subscriber.GetType();
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         
@@ -78,9 +89,8 @@ public class EventBus
     /// </summary>
     public void Unregister(object subscriber)
     {
-        if (subscriber == null)
-            throw new ArgumentNullException(nameof(subscriber));
-            
+        ArgumentNullException.ThrowIfNull(subscriber);
+
         _registry.RemoveHandler(subscriber);
     }
     
@@ -89,20 +99,21 @@ public class EventBus
     /// </summary>
     public void Publish(object eventObject)
     {
-        if (eventObject == null)
-            throw new ArgumentNullException(nameof(eventObject));
-            
-        // Avoid recursive publishing of SubscriberExceptionEvent or DeadEvent
-        if (eventObject is SubscriberExceptionEvent || eventObject is DeadEvent)
+        switch (eventObject)
         {
-            PublishDirect(eventObject);
-            return;
+            case null:
+                throw new ArgumentNullException(nameof(eventObject));
+            // Avoid recursive publishing of SubscriberExceptionEvent or DeadEvent
+            case SubscriberExceptionEvent:
+            case DeadEvent:
+                PublishDirect(eventObject);
+                return;
         }
-            
+
         var eventType = eventObject.GetType();
         var handlers = _registry.GetHandlers(eventType).ToList();
         
-        if (!handlers.Any())
+        if (handlers.Count == 0)
         {
             HandleNoSubscribers(eventObject);
             return;
@@ -119,16 +130,17 @@ public class EventBus
     /// </summary>
     public async Task PublishAsync(object eventObject)
     {
-        if (eventObject == null)
-            throw new ArgumentNullException(nameof(eventObject));
-            
-        // Avoid recursive publishing of SubscriberExceptionEvent or DeadEvent
-        if (eventObject is SubscriberExceptionEvent || eventObject is DeadEvent)
+        switch (eventObject)
         {
-            PublishDirect(eventObject);
-            return;
+            case null:
+                throw new ArgumentNullException(nameof(eventObject));
+            // Avoid recursive publishing of SubscriberExceptionEvent or DeadEvent
+            case SubscriberExceptionEvent:
+            case DeadEvent:
+                PublishDirect(eventObject);
+                return;
         }
-            
+
         var eventType = eventObject.GetType();
         var handlers = _registry.GetHandlers(eventType).ToList();
         
@@ -200,6 +212,8 @@ public class EventBus
                     // In a real implementation, this would use SynchronizationContext
                     handler.Invoke(eventObject);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
         catch (Exception ex)
@@ -250,12 +264,11 @@ public class EventBus
         {
             Console.WriteLine($"EventBus: No subscribers for event type: {eventObject.GetType().Name}");
         }
+
+        if (!_configuration.SendNoSubscriberEvent) return;
         
-        if (_configuration.SendNoSubscriberEvent)
-        {
-            var deadEvent = new DeadEvent(eventObject, this);
-            PublishDirect(deadEvent);
-        }
+        var deadEvent = new DeadEvent(eventObject, this);
+        PublishDirect(deadEvent);
     }
     
     private void ValidateHandlerMethod(MethodInfo method)

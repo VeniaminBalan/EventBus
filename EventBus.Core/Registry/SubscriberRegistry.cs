@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using EventBus.Core.Models;
 
 namespace EventBus.Core.Registry;
 
@@ -7,21 +8,16 @@ namespace EventBus.Core.Registry;
 /// </summary>
 public class SubscriberRegistry
 {
-    private readonly ConcurrentDictionary<Type, ConcurrentBag<Models.SubscriberMethod>> _handlers;
-    
-    public SubscriberRegistry()
-    {
-        _handlers = new ConcurrentDictionary<Type, ConcurrentBag<Models.SubscriberMethod>>();
-    }
-    
+    private readonly ConcurrentDictionary<Type, ConcurrentBag<SubscriberMethod>> _handlers = new();
+
     /// <summary>
     /// Adds a handler method for a specific event type.
     /// </summary>
-    public void AddHandler(Models.SubscriberMethod subscriberMethod)
+    public void AddHandler(SubscriberMethod subscriberMethod)
     {
         ArgumentNullException.ThrowIfNull(subscriberMethod);
 
-        var handlers = _handlers.GetOrAdd(subscriberMethod.EventType, _ => new ConcurrentBag<Models.SubscriberMethod>());
+        var handlers = _handlers.GetOrAdd(subscriberMethod.EventType, _ => []);
         handlers.Add(subscriberMethod);
     }
     
@@ -32,23 +28,23 @@ public class SubscriberRegistry
     {
         ArgumentNullException.ThrowIfNull(subscriber);
 
-        foreach (var (key, handlers) in _handlers)
+        foreach (var (type, handlers) in _handlers)
         {
             var toRemove = handlers.Where(h => ReferenceEquals(h.Subscriber, subscriber)).ToList();
 
             if (toRemove.Count == 0) continue;
             // Create a new bag without the removed handlers
-            var newBag = new ConcurrentBag<Models.SubscriberMethod>(
+            var newBag = new ConcurrentBag<SubscriberMethod>(
                 handlers.Except(toRemove)
             );
-            _handlers.TryUpdate(key, newBag, handlers);
+            _handlers.TryUpdate(type, newBag, handlers);
         }
     }
     
     /// <summary>
     /// Gets all handler methods for a specific event type, sorted by priority (descending).
     /// </summary>
-    public IEnumerable<Models.SubscriberMethod> GetHandlers(Type eventType)
+    public IEnumerable<SubscriberMethod> GetHandlers(Type eventType)
     {
         ArgumentNullException.ThrowIfNull(eventType);
 
@@ -57,7 +53,7 @@ public class SubscriberRegistry
             return handlers.OrderByDescending(h => h.Priority).ToList();
         }
         
-        return Enumerable.Empty<Models.SubscriberMethod>();
+        return [];
     }
     
     /// <summary>
