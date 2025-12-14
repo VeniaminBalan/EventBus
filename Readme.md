@@ -1,6 +1,7 @@
 # EventBus Implementation Summary
 
 ![CI Build and Test](https://github.com/VeniaminBalan/EventBus/actions/workflows/ci.yml/badge.svg)
+![Test Results](https://github.com/VeniaminBalan/EventBus/actions/workflows/ci.yml/badge.svg?event=push)
 
 ## Project Completed Successfully ✓
 
@@ -43,10 +44,6 @@ The EventBus architecture has been fully implemented according to the specificat
 ✓ **Singleton Support** - EventBus.Default singleton instance
 ✓ **Type Safety** - Strongly typed events through method parameters
 ✓ **Private Handler Support** - Handlers can be private methods
-
-## Test Coverage
-
-**58 Tests - All Passing ✓**
 
 ### Test Files Created:
 1. **EventBusBasicTests.cs** - Basic registration, publishing, unregistration
@@ -182,14 +179,6 @@ var config = new EventBusConfiguration
 };
 
 var eventBus = new EventBus(config);
-```
-
-## Build and Test Results
-
-```
-Build: SUCCESS
-Tests: 58 passed, 0 failed
-Coverage: Comprehensive - all core functionality tested
 ```
 
 ## Advanced Features Implemented
