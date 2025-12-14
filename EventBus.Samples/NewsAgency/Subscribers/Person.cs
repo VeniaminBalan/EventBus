@@ -17,34 +17,30 @@ public class Person
     public void AddInterest(NewsCategory category)
     {
         _interests.Add(category);
-        Console.WriteLine($"👤 {_name} is now interested in {category} news");
+        Console.WriteLine($"{_name} is now interested in {category} news");
     }
 
     public void RemoveInterest(NewsCategory category)
     {
         _interests.Remove(category);
-        Console.WriteLine($"👤 {_name} is no longer interested in {category} news");
+        Console.WriteLine($"{_name} is no longer interested in {category} news");
     }
 
     [EventHandler]
     public void OnNewsArticle(NewsArticleEvent article)
     {
-        if (_interests.Contains(article.Category))
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"👤 [{_name}] Read: {article}");
-            Console.ResetColor();
-        }
+        if (!_interests.Contains(article.Category)) return;
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine($"[{_name}] Read: {article}");
+        Console.ResetColor();
     }
 
     [EventHandler(Priority = 100)]
     public void OnBreakingNews(BreakingNewsEvent breaking)
     {
-        if (_interests.Contains(breaking.Domain))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"👤 [{_name}] ALERT: {breaking}");
-            Console.ResetColor();
-        }
+        if (!_interests.Contains(breaking.Domain)) return;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"[{_name}] ALERT: {breaking}");
+        Console.ResetColor();
     }
 }

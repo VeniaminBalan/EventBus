@@ -29,7 +29,7 @@ public class DetailedDisplay
     {
         if (!_sensorHistory.ContainsKey(sensorId))
         {
-            _sensorHistory[sensorId] = new List<string>();
+            _sensorHistory[sensorId] = [];
         }
 
         _sensorHistory[sensorId].Add(reading);

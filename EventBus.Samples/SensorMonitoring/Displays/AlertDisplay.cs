@@ -20,11 +20,5 @@ public class AlertDisplay
         Console.WriteLine($"| [AlertDisplay-{_displayId}] {evt}");
         Console.WriteLine("-------------------------------------------------\n");
         Console.ResetColor();
-        
-        // Could trigger additional actions like logging, notifications, etc.
-        if (evt.Severity == "CRITICAL")
-        {
-            Console.Beep();
-        }
     }
 }

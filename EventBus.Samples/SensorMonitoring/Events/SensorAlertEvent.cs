@@ -21,6 +21,6 @@ public class SensorAlertEvent
 
     public override string ToString()
     {
-        return $"⚠️ ALERT [{Timestamp:HH:mm:ss}] {Severity} - {SensorType}: {Value:F1} exceeds threshold {Threshold:F1} in {Region}";
+        return $"!!! ALERT [{Timestamp:HH:mm:ss}] {Severity} - {SensorType}: {Value:F1} exceeds threshold {Threshold:F1} in {Region}";
     }
 }

@@ -12,7 +12,7 @@ public class NewsAggregator
     public NewsAggregator(string name)
     {
         _name = name;
-        foreach (NewsCategory category in Enum.GetValues(typeof(NewsCategory)))
+        foreach (var category in Enum.GetValues<NewsCategory>())
         {
             _categoryCount[category] = 0;
         }
@@ -40,7 +40,7 @@ public class NewsAggregator
     private void DisplayStatistics()
     {
         Console.ForegroundColor = ConsoleColor.DarkCyan;
-        Console.WriteLine($"\n📊 [{_name}] News Statistics (Total: {_totalArticles}):");
+        Console.WriteLine($"\n[{_name}] News Statistics (Total: {_totalArticles}):");
         foreach (var category in _categoryCount.OrderByDescending(x => x.Value))
         {
             if (category.Value > 0)

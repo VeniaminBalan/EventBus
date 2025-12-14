@@ -2,7 +2,7 @@ using EventBus.Samples.NewsAgency.Events;
 
 namespace EventBus.Samples.NewsAgency.Agencies;
 
-public abstract class BaseNewsAgency
+public abstract class BaseNewsAgency 
 {
     protected string AgencyName { get; set; }
     protected Core.EventBus EventBus { get; set; }

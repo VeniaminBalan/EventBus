@@ -20,7 +20,7 @@ public class HumiditySensor : BaseSensor
         while (IsRunning && !cancellationToken.IsCancellationRequested)
         {
             // Simulate humidity reading (0-100%)
-            double humidity = Math.Clamp(_baseHumidity + (Random.NextDouble() * 40 - 20), 0, 100);
+            var humidity = Math.Clamp(_baseHumidity + (Random.NextDouble() * 40 - 20), 0, 100);
             
             var readingEvent = new HumidityReadingEvent(humidity, SensorId, Region);
             await EventBus.PublishAsync(readingEvent);

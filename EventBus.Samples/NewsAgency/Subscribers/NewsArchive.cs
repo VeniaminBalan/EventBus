@@ -23,7 +23,7 @@ public class NewsArchive
     public void DisplayArchiveSummary()
     {
         Console.ForegroundColor = ConsoleColor.DarkGray;
-        Console.WriteLine($"\n📚 [Archive] Total archived: {_archivedArticles.Count} articles, {_archivedBreaking.Count} breaking news");
+        Console.WriteLine($"\n[Archive] Total archived: {_archivedArticles.Count} articles, {_archivedBreaking.Count} breaking news");
         Console.ResetColor();
     }
 

@@ -6,8 +6,8 @@ namespace EventBus.Samples.SensorMonitoring.Displays;
 public class AverageDisplay
 {
     private readonly string _displayId;
-    private readonly List<double> _temperatureReadings = new();
-    private readonly List<double> _humidityReadings = new();
+    private readonly List<double> _temperatureReadings = [];
+    private readonly List<double> _humidityReadings = [];
     private int _updateCounter = 0;
 
     public AverageDisplay(string displayId)

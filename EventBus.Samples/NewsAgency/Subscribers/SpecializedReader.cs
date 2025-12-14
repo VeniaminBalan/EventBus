@@ -17,22 +17,18 @@ public class SpecializedReader
     [EventHandler]
     public void OnNewsArticle(NewsArticleEvent article)
     {
-        if (article.Category == _specialization)
-        {
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"📖 [{_name} - {_specialization} Specialist] Analyzing: {article.Headline}");
-            Console.ResetColor();
-        }
+        if (article.Category != _specialization) return;
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine($"[{_name} - {_specialization} Specialist] Analyzing: {article.Headline}");
+        Console.ResetColor();
     }
 
     [EventHandler(Priority = 90)]
     public void OnBreakingNews(BreakingNewsEvent breaking)
     {
-        if (breaking.Domain == _specialization)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"📖 [{_name} - {_specialization} Specialist] URGENT ANALYSIS: {breaking.Headline}");
-            Console.ResetColor();
-        }
+        if (breaking.Domain != _specialization) return;
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"[{_name} - {_specialization} Specialist] URGENT ANALYSIS: {breaking.Headline}");
+        Console.ResetColor();
     }
 }
