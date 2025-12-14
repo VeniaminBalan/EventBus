@@ -17,4 +17,8 @@
         <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\EventBus.Core\EventBus.Core.csproj" />
+    </ItemGroup>
+
 </Project>
