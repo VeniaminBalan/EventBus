@@ -3,4 +3,5 @@
     <Project Path="EventBus.Test/EventBus.Test.csproj" />
   </Folder>
   <Project Path="EventBus.Core/EventBus.Core.csproj" />
+  <Project Path="EventBus.Samples/EventBus.Samples.csproj" />
 </Solution>
