@@ -1,5 +1,7 @@
 # EventBus Implementation Summary
 
+![CI Build and Test](https://github.com/VeniaminBalan/EventBus/actions/workflows/ci.yml/badge.svg)
+
 ## Project Completed Successfully ✓
 
 ### Implementation Details
@@ -44,18 +46,19 @@ The EventBus architecture has been fully implemented according to the specificat
 
 ## Test Coverage
 
-**46 Tests - All Passing ✓**
+**58 Tests - All Passing ✓**
 
 ### Test Files Created:
 1. **EventBusBasicTests.cs** - Basic registration, publishing, unregistration
-2. **PriorityTests.cs** - Priority-based execution ordering
-3. **ExceptionHandlingTests.cs** - Exception handling and SubscriberExceptionEvent
-4. **AsyncTests.cs** - Async event handling and PublishAsync
-5. **DeadEventTests.cs** - DeadEvent publishing for unhandled events
-6. **ValidationTests.cs** - Handler method validation
-7. **SubscriberMethodTests.cs** - SubscriberMethod class functionality
-8. **SubscriberRegistryTests.cs** - Registry operations
-9. **IntegrationTests.cs** - Real-world scenarios and event chaining
+2. **EventBusConstructorTests.cs** - Constructor and configuration initialization
+3. **PriorityTests.cs** - Priority-based execution ordering
+4. **ExceptionHandlingTests.cs** - Exception handling and SubscriberExceptionEvent
+5. **AsyncTests.cs** - Async event handling and PublishAsync
+6. **DeadEventTests.cs** - DeadEvent publishing for unhandled events
+7. **ValidationTests.cs** - Handler method validation
+8. **SubscriberMethodTests.cs** - SubscriberMethod class functionality
+9. **SubscriberRegistryTests.cs** - Registry operations
+10. **IntegrationTests.cs** - Real-world scenarios and event chaining
 
 ### Test Technologies:
 - **MSTest** - Testing framework
@@ -68,7 +71,6 @@ The EventBus architecture has been fully implemented according to the specificat
 EventBus.Core/
 ├── EventBus.cs                          # Main EventBus class
 ├── EventBusConfiguration.cs             # Configuration options
-├── SampleUsage.cs                       # Usage examples
 ├── Attributes/
 │   └── EventHandlerAttribute.cs         # Handler attribute
 ├── Enums/
@@ -85,6 +87,7 @@ EventBus.Core/
 
 EventBus.Test/
 ├── EventBusBasicTests.cs
+├── EventBusConstructorTests.cs
 ├── PriorityTests.cs
 ├── ExceptionHandlingTests.cs
 ├── AsyncTests.cs
@@ -92,7 +95,43 @@ EventBus.Test/
 ├── ValidationTests.cs
 ├── SubscriberMethodTests.cs
 ├── SubscriberRegistryTests.cs
-└── IntegrationTests.cs
+├── IntegrationTests.cs
+└── MSTestSettings.cs
+
+EventBus.Samples/
+├── Program.cs                           # Interactive sample selector
+├── NewsAgency/
+│   ├── Agencies/
+│   │   ├── BaseNewsAgency.cs
+│   │   ├── SportsNewsAgency.cs
+│   │   ├── CultureNewsAgency.cs
+│   │   ├── PoliticsNewsAgency.cs
+│   │   └── TechnologyNewsAgency.cs
+│   ├── Events/
+│   │   ├── NewsArticleEvent.cs
+│   │   ├── BreakingNewsEvent.cs
+│   │   └── NewsCategory.cs
+│   └── Subscribers/
+│       ├── NewsAggregator.cs
+│       ├── NewsArchive.cs
+│       ├── SpecializedReader.cs
+│       └── Person.cs
+└── SensorMonitoring/
+    ├── Sensors/
+    │   ├── BaseSensor.cs
+    │   ├── TemperatureSensor.cs
+    │   ├── HumiditySensor.cs
+    │   └── WaterLevelSensor.cs
+    ├── Events/
+    │   ├── TemperatureReadingEvent.cs
+    │   ├── HumidityReadingEvent.cs
+    │   ├── WaterLevelReadingEvent.cs
+    │   └── SensorAlertEvent.cs
+    └── Displays/
+        ├── NumericDisplay.cs
+        ├── AverageDisplay.cs
+        ├── DetailedDisplay.cs
+        └── AlertDisplay.cs
 ```
 
 ## Usage Example
@@ -149,9 +188,75 @@ var eventBus = new EventBus(config);
 
 ```
 Build: SUCCESS
-Tests: 46 passed, 0 failed
+Tests: 58 passed, 0 failed
 Coverage: Comprehensive - all core functionality tested
 ```
+
+## Advanced Features Implemented
+
+✓ **Action-based Configuration** - Configure EventBus using Action delegates:
+```csharp
+var eventBus = new EventBus(config => 
+{
+    config.ThrowSubscriberException = false;
+    config.SendSubscriberExceptionEvent = true;
+});
+```
+
+✓ **Direct Event Publishing** - Special handling for system events (SubscriberExceptionEvent, DeadEvent)
+✓ **Exception Unwrapping** - Automatic unwrapping of TargetInvocationException
+✓ **Flexible Thread Modes** - Support for Posting, Background, Async, and MainThread
+✓ **Primitive Type Protection** - Validation prevents primitive types as event parameters
+
+## Next Steps (Future Enhancements - Phase 2+)
+
+- [ ] Event inheritance support (handlers receive derived events)
+- [ ] Sticky events (persist after publishing)
+- [ ] Weak reference support for subscribers (configuration exists, implementation pending)
+- [ ] MainThread synchronization context integration (basic support exists)
+- [ ] Performance benchmarks
+- [ ] NuGet package creation
+- [ ] Enhanced logging with structured logging support different visualization strategies
+- Alert handling for critical conditions
+- Asynchronous sensor reading and event publishing
+- Background thread processing
+
+**Key Components:**
+- **Sensors**: Continuously generate readings and publish events
+- **Displays**: Subscribe to sensor events and visualize data
+  - NumericDisplay: Shows current values
+  - AverageDisplay: Calculates and displays averages
+  - DetailedDisplay: Shows comprehensive statistics
+  - AlertDisplay: Monitors critical conditions
+
+### 2. News Agency System
+A news aggregation and distribution system that demonstrates:
+- Multiple news agencies publishing different types of content
+- Specialized subscribers filtering by category
+- Breaking news priority handling
+- News archival and aggregation
+- Event-driven content distribution
+
+**Key Components:**
+- **News Agencies**: Publish articles across different categories
+  - Sports, Culture, Politics, Technology agencies
+- **Subscribers**: React to news events
+  - NewsAggregator: Collects all news
+  - NewsArchive: Stores historical articles
+  - SpecializedReader: Filters by interests
+  - Person: Individual news consumers
+
+### Running the Samples
+
+```csharp
+dotnet run --project EventBus.Samples
+```
+
+The application presents an interactive menu:
+1. Sensor Monitoring System
+2. News Agency System
+3. Run Both Samples (Side by Side)
+0. Exit
 
 ## Next Steps (Future Enhancements - Phase 2+)
 
