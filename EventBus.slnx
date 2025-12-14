@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Tests/">
+    <Project Path="EventBus.Test/EventBus.Test.csproj" />
+  </Folder>
+  <Project Path="EventBus.Core/EventBus.Core.csproj" />
+</Solution>
