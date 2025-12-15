@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using EventBus.Core.Attributes;
 using EventBus.Samples.SensorMonitoring.Events;
 
@@ -9,7 +10,9 @@ public class AverageDisplay
     private readonly List<double> _temperatureReadings = [];
     private readonly List<double> _humidityReadings = [];
     private int _updateCounter = 0;
-
+    
+    private readonly Lock _lock = new();
+    
     public AverageDisplay(string displayId)
     {
         _displayId = displayId;
@@ -18,23 +21,29 @@ public class AverageDisplay
     [EventHandler]
     public void OnTemperatureReading(TemperatureReadingEvent evt)
     {
-        _temperatureReadings.Add(evt.Temperature);
-        if (_temperatureReadings.Count > 10)
-            _temperatureReadings.RemoveAt(0);
-
-        _updateCounter++;
-        if (_updateCounter % 5 == 0)
+        lock (_lock)
         {
-            DisplayAverages();
+            _temperatureReadings.Add(evt.Temperature);
+            if (_temperatureReadings.Count > 10)
+                _temperatureReadings.RemoveAt(0);
+
+            _updateCounter++;
+            if (_updateCounter % 5 == 0)
+            {
+                DisplayAverages();
+            }
         }
     }
 
     [EventHandler]
     public void OnHumidityReading(HumidityReadingEvent evt)
     {
-        _humidityReadings.Add(evt.Humidity);
-        if (_humidityReadings.Count > 10)
-            _humidityReadings.RemoveAt(0);
+        lock (_lock)
+        {
+            _humidityReadings.Add(evt.Humidity);
+            if (_humidityReadings.Count > 10)
+                _humidityReadings.RemoveAt(0);   
+        }
     }
 
     private void DisplayAverages()

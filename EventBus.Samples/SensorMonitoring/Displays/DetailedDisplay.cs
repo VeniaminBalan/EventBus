@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using EventBus.Core.Attributes;
 using EventBus.Samples.SensorMonitoring.Events;
 
@@ -6,7 +7,7 @@ namespace EventBus.Samples.SensorMonitoring.Displays;
 public class DetailedDisplay
 {
     private readonly string _displayId;
-    private readonly Dictionary<string, List<string>> _sensorHistory = new();
+    private readonly ConcurrentDictionary<string, List<string>> _sensorHistory = new();
 
     public DetailedDisplay(string displayId)
     {
