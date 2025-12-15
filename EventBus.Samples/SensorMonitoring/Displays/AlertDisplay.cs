@@ -19,6 +19,6 @@ public class AlertDisplay
         Console.WriteLine("\n-------------------------------------------------");
         Console.WriteLine($"| [AlertDisplay-{_displayId}] {evt}");
         Console.WriteLine("-------------------------------------------------\n");
-        Console.ResetColor();
+        Console.ResetColor(); 
     }
 }

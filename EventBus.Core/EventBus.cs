@@ -64,7 +64,7 @@ public class EventBus
         foreach (var method in methods)
         {
             var attribute = method.GetCustomAttribute<EventHandlerAttribute>();
-            if (attribute == null)
+            if (attribute is null)
                 continue;
                 
             ValidateHandlerMethod(method);
@@ -144,7 +144,7 @@ public class EventBus
         var eventType = eventObject.GetType();
         var handlers = _registry.GetHandlers(eventType).ToList();
         
-        if (!handlers.Any())
+        if (handlers.Count == 0)
         {
             HandleNoSubscribers(eventObject);
             return;
@@ -164,7 +164,7 @@ public class EventBus
             }
         }
         
-        if (tasks.Any())
+        if (tasks.Count != 0)
         {
             await Task.WhenAll(tasks);
         }

@@ -75,7 +75,7 @@ static async Task RunSensorMonitoringSample()
     // Wait for user input to stop
     await Task.Run(() => Console.ReadKey(true));
     
-    Console.WriteLine("\n\n Stopping sensors...");
+    Console.WriteLine("\n Stopping sensors...");
     cts.Cancel();
 
     try
@@ -87,7 +87,7 @@ static async Task RunSensorMonitoringSample()
         Console.WriteLine("All sensors stopped successfully");
     }
 
-    Console.WriteLine("\nPress any key to return to menu...");
+    Console.WriteLine("\nPress any key to return to exit...");
     Console.ReadKey();
 }
 
